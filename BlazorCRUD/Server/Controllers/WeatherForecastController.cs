@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace BlazorCRUD.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -24,7 +23,7 @@ namespace BlazorCRUD.Server.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet(ApiRoutes.WeatherForecast.GetAll)]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
