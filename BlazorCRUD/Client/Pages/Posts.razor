@@ -1,0 +1,68 @@
+﻿@page "/posts"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<h1>Posts</h1>
+
+@if (posts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <button class="btn btn-success" @onclick="() => CreatePost()">Create</button>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Text</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in posts)
+            {
+                <tr>
+                    <td>@post.Id</td>
+                    <td>@post.Title</td>
+                    <td>@post.Text</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => EditPost(post.Id)">Edit</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" @onclick="() => DeletePost(post.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    public Post[] posts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        posts = await Http.GetFromJsonAsync<Post[]>(ApiRoutes.Posts.GetAll);
+    }
+
+    private void CreatePost()
+    {
+        Navigation.NavigateTo("/addEditPost");
+    }
+
+    private void EditPost(int postId)
+    {
+        Navigation.NavigateTo($"/addEditPost/{postId}");
+    }
+
+    private async Task DeletePost(int postId)
+    {
+        await Http.DeleteAsync(ApiRoutes.Posts.Delete.Replace("{postId}", postId.ToString()));
+        posts = await Http.GetFromJsonAsync<Post[]>(ApiRoutes.Posts.GetAll);
+        StateHasChanged();
+    }
+}

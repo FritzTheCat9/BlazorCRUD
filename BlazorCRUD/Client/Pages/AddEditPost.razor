@@ -1,0 +1,61 @@
+﻿@page "/addEditPost/{postId:int}"
+@page "/addEditPost"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+@if (postId == 0)
+{
+    <h3>Add Post</h3>
+}
+else
+{
+    <h3>Edit Post</h3>
+}
+
+<div>
+    <EditForm Model="post" OnValidSubmit="SubmitPost">
+        <div class="form-grup">
+            <label>Title</label>
+            <InputText @bind-Value="post.Title" />
+        </div>
+
+        <div class="form-grup">
+            <label>Text</label>
+            <InputText @bind-Value="post.Text" />
+        </div>
+
+        <div class="form-grup">
+            <input type="submit" class="btn btn-success" value="@(postId == 0 ? "Add post" : "Edit post")" />
+            <NavLink class="btn btn-info" href="posts">Back to posts</NavLink>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public int postId { get; set; }
+
+    private Post post = new Post();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(postId != 0)
+        {
+            post = await Http.GetFromJsonAsync<Post>(ApiRoutes.Posts.Get.Replace("{postId}", postId.ToString()));
+        }
+    }
+
+    private async Task SubmitPost()
+    {
+        if (postId == 0)
+        {
+            var result = await Http.PostAsJsonAsync<Post>(ApiRoutes.Posts.Create, post);
+            Navigation.NavigateTo("/posts");
+        }
+        else
+        {
+            var result = await Http.PutAsJsonAsync<Post>(ApiRoutes.Posts.Update.Replace("{postId}", postId.ToString()), post);
+            Navigation.NavigateTo("/posts");
+        }
+    }
+}
