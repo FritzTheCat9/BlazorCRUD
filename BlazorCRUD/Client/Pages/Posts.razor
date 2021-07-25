@@ -1,5 +1,6 @@
 ﻿@page "/posts"
 @inject HttpClient Http
+@inject IPostService IPostService
 @inject NavigationManager Navigation
 
 <h1>Posts</h1>
@@ -46,7 +47,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        posts = await Http.GetFromJsonAsync<Post[]>(ApiRoutes.Posts.GetAll);
+        var p = await IPostService.GetAllPostsAsync();
+        posts = p.ToArray();
     }
 
     private void CreatePost()
@@ -61,8 +63,11 @@ else
 
     private async Task DeletePost(int postId)
     {
-        await Http.DeleteAsync(ApiRoutes.Posts.Delete.Replace("{postId}", postId.ToString()));
-        posts = await Http.GetFromJsonAsync<Post[]>(ApiRoutes.Posts.GetAll);
+        await IPostService.DeletePostAsync(postId); 
+
+        var p = await IPostService.GetAllPostsAsync();
+        posts = p.ToArray();
+
         StateHasChanged();
     }
 }

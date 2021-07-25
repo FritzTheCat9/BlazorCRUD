@@ -1,6 +1,6 @@
 ﻿@page "/addEditPost/{postId:int}"
 @page "/addEditPost"
-@inject HttpClient Http
+@inject IPostService IPostService
 @inject NavigationManager Navigation
 
 @if (postId == 0)
@@ -41,7 +41,7 @@ else
     {
         if(postId != 0)
         {
-            post = await Http.GetFromJsonAsync<Post>(ApiRoutes.Posts.Get.Replace("{postId}", postId.ToString()));
+            post = await IPostService.GetPostAsync(postId);
         }
     }
 
@@ -49,12 +49,12 @@ else
     {
         if (postId == 0)
         {
-            var result = await Http.PostAsJsonAsync<Post>(ApiRoutes.Posts.Create, post);
+            await IPostService.CreatePostAsync(post);
             Navigation.NavigateTo("/posts");
         }
         else
         {
-            var result = await Http.PutAsJsonAsync<Post>(ApiRoutes.Posts.Update.Replace("{postId}", postId.ToString()), post);
+            await IPostService.UpdatePostAsync(postId, post);
             Navigation.NavigateTo("/posts");
         }
     }
