@@ -67,7 +67,5 @@ else
 
         var p = await IPostService.GetAllPostsAsync();
         posts = p.ToArray();
-
-        StateHasChanged();
     }
 }

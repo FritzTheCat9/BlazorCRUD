@@ -14,6 +14,9 @@ else
 
 <div>
     <EditForm Model="post" OnValidSubmit="SubmitPost">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
         <div class="form-grup">
             <label>Title</label>
             <InputText @bind-Value="post.Title" />
