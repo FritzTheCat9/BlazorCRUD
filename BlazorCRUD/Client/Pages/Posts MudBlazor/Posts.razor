@@ -1,0 +1,112 @@
+﻿@page "/mudblazor/posts"
+@inject HttpClient Http
+@inject IPostService IPostService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<MudButton Class="mb-5" Color="Color.Success" Variant="Variant.Filled" OnClick="() => CreatePost()">Add post</MudButton>
+
+<MudTable Items="@Elements" Dense="@dense" Hover="@hover" ReadOnly="@ronly" CanCancelEdit="@canCancelEdit" Filter="new Func<Post,bool>(FilterFunc)" @bind-SelectedItem="selectedItem" SortLabel="Sort By"
+          CommitEditTooltip="Edit" OnCommitEditClick="@(() => Snackbar.Add("Post Edited"))" RowEditPreview="BackupItem" RowEditCancel="ResetItemToOriginalValues" RowEditCommit="ItemHasBeenCommitted">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Posts CRUD made with MudBlazor</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <ColGroup>
+        <col style="width:50px;" />
+        <col />
+        <col />
+        <col style="width:50px;" />
+    </ColGroup>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<Post, object>(x=>x.Id)">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Post, object>(x=>x.Title)">Title</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Post, object>(x=>x.Text)">Text</MudTableSortLabel></MudTh>
+        <MudTh>Delete</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Title">@context.Title</MudTd>
+        <MudTd DataLabel="Text">@context.Text</MudTd>
+        <MudTh><MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" OnClick="() => DeletePost(context.Id)"></MudIconButton></MudTh>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Title">
+            <MudTextField @bind-Value="@context.Title" Required />
+        </MudTd>
+        <MudTd DataLabel="Text">
+            <MudTextField @bind-Value="@context.Text" Required />
+        </MudTd>
+    </RowEditingTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    private bool dense = true;
+    private bool hover = true;
+    private bool ronly = false;
+    private bool canCancelEdit = true;
+    private string searchString = "";
+    private Post selectedItem = null;
+    private Post elementBeforeEdit;
+    private HashSet<Post> selectedItems = new HashSet<Post>();
+
+    private IEnumerable<Post> Elements = new List<Post>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await IPostService.GetAllPostsAsync();
+    }
+
+    private void BackupItem(object element)
+    {
+        elementBeforeEdit = new()
+        {
+            Id = ((Post)element).Id,
+            Title = ((Post)element).Title,
+            Text = ((Post)element).Text,
+        };
+    }
+
+    private void ItemHasBeenCommitted(object element)
+    {
+        IPostService.UpdatePostAsync(((Post)element).Id, (Post)element);
+    }
+
+    private void ResetItemToOriginalValues(object element)
+    {
+        ((Post)element).Id = elementBeforeEdit.Id;
+        ((Post)element).Title = elementBeforeEdit.Title;
+        ((Post)element).Text = elementBeforeEdit.Text;
+    }
+
+    private bool FilterFunc(Post element)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Text.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.Title} {element.Text}".Contains(searchString))
+            return true;
+        return false;
+    }
+
+    private async Task DeletePost(int postId)
+    {
+        await IPostService.DeletePostAsync(postId);
+
+        Elements = await IPostService.GetAllPostsAsync();
+        Snackbar.Add("Post Deleted");
+    }
+
+    private void CreatePost()
+    {
+        Navigation.NavigateTo("/mudblazor/addPost");
+    }
+}

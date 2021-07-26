@@ -1,0 +1,41 @@
+﻿@page  "/mudblazor/addPost"
+@inject IPostService IPostService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<h3>Add Post</h3>
+
+<div style="max-width: 400px;">
+    <MudCard>
+        <MudCardContent>
+            <MudForm @bind-IsValid="@success">
+                <MudTextField @bind-Value="post.Title" Label="Title" Required="true" RequiredError="Title is required!" />
+                <MudTextField @bind-Value="post.Text" Label="Text" Required="true" RequiredError="Text is required!" />
+            </MudForm>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" OnClick="SubmitPost" Class="ml-auto">Add post</MudButton>
+        </MudCardActions>
+    </MudCard>
+</div>
+
+<MudButton Class="mt-5" Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToPosts">Back to posts</MudButton>
+
+@code {
+    bool success;
+    MudForm form;
+
+    private Post post = new Post();
+
+    private async Task SubmitPost()
+    {
+        await IPostService.CreatePostAsync(post);
+        Navigation.NavigateTo("/mudblazor/posts");
+        Snackbar.Add("Post Added");
+    }
+
+    private void NavigateToPosts()
+    {
+        Navigation.NavigateTo("/mudblazor/posts");
+    }
+}
