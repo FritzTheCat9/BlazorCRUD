@@ -1,11 +1,27 @@
 ﻿@page "/"
+@inject NavigationManager Navigation
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+<h5>Welcome to basic CRUD Application.</h5>
+<br />
+<h5>In "Posts" tab you can make CRUD operations (Create, Edit, Delete, Details) on posts and call the api to update posts in the database.</h5>
+<br />
+<h5>In "Posts MudBlazor" tab you can to make CRUD operations using MadBlazor components. Also it is possible to sort posts by chosen collumn or sort elements.</h5>
+<br class="mb-5" />
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<button class="btn btn-info" @onclick="NavigateToPosts">Bootstrap posts</button>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToMudblazorPosts">MudBlazor posts</MudButton>
+<TelerikButton Primary="true" OnClick="NavigateToPosts">Telerik posts</TelerikButton>
 
-<TelerikButton>Telerik Test Button</TelerikButton>
-<TelerikButton Primary="true">Telerik Test Primary Button</TelerikButton>
-<MudButton Variant="Variant.Filled" Color="Color.Primary">MudBlazor Test Primary Button</MudButton>
+@code {
+    private void NavigateToPosts()
+    {
+        Navigation.NavigateTo("/posts");
+    }
+
+    private void NavigateToMudblazorPosts()
+    {
+        Navigation.NavigateTo("/mudblazor/posts");
+    }
+} 
