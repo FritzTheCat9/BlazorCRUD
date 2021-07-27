@@ -3,36 +3,43 @@
 @inject IPostService IPostService
 @inject NavigationManager Navigation
 
-@if (postId == 0)
+@if (postId == 0 || post != null)
 {
-    <h3>Add Post</h3>
+    @if (postId == 0)
+    {
+        <h3>Add Post</h3>
+    }
+    else
+    {
+        <h3>Edit Post</h3>
+    }
+
+    <div>
+        <EditForm Model="post" OnValidSubmit="SubmitPost">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-grup">
+                <label>Title</label>
+                <InputText @bind-Value="post.Title" />
+            </div>
+
+            <div class="form-grup">
+                <label>Text</label>
+                <InputText @bind-Value="post.Text" />
+            </div>
+
+            <div class="form-grup">
+                <input type="submit" class="btn btn-success" value="@(postId == 0 ? "Add post" : "Edit post")" />
+                <NavLink class="btn btn-info" href="posts">Back to posts</NavLink>
+            </div>
+        </EditForm>
+    </div>
 }
 else
 {
-    <h3>Edit Post</h3>
+    <p><em>Post with given id doesn't exist</em></p>
 }
-
-<div>
-    <EditForm Model="post" OnValidSubmit="SubmitPost">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="form-grup">
-            <label>Title</label>
-            <InputText @bind-Value="post.Title" />
-        </div>
-
-        <div class="form-grup">
-            <label>Text</label>
-            <InputText @bind-Value="post.Text" />
-        </div>
-
-        <div class="form-grup">
-            <input type="submit" class="btn btn-success" value="@(postId == 0 ? "Add post" : "Edit post")" />
-            <NavLink class="btn btn-info" href="posts">Back to posts</NavLink>
-        </div>
-    </EditForm>
-</div>
 
 @code {
     [Parameter]
@@ -42,7 +49,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if(postId != 0)
+        if (postId != 0)
         {
             post = await IPostService.GetPostAsync(postId);
         }

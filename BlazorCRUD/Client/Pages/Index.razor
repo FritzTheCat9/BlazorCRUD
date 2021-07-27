@@ -12,7 +12,7 @@
 
 <button class="btn btn-info" @onclick="NavigateToPosts">Bootstrap posts</button>
 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToMudblazorPosts">MudBlazor posts</MudButton>
-<TelerikButton Primary="true" OnClick="NavigateToPosts">Telerik posts</TelerikButton>
+<TelerikButton Primary="true" OnClick="NavigateToTelerikPosts">Telerik posts</TelerikButton>
 
 @code {
     private void NavigateToPosts()
@@ -23,5 +23,10 @@
     private void NavigateToMudblazorPosts()
     {
         Navigation.NavigateTo("/mudblazor/posts");
+    }
+
+    private void NavigateToTelerikPosts()
+    {
+        Navigation.NavigateTo("/telerik/posts");
     }
 } 

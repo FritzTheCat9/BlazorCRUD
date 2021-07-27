@@ -7,7 +7,15 @@
 
 @if (posts == null)
 {
-    <p><em>Loading...</em></p>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudGrid Justify="Justify.Center">
+                <MudItem>
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+                </MudItem>
+            </MudGrid>
+        </MudItem>
+    </MudGrid>
 }
 else
 {
@@ -21,6 +29,7 @@ else
                 <th>Text</th>
                 <th>Edit</th>
                 <th>Delete</th>
+                <th>Details</th>
             </tr>
         </thead>
         <tbody>
@@ -35,6 +44,9 @@ else
                     </td>
                     <td>
                         <button class="btn btn-danger" @onclick="() => DeletePost(post.Id)">Delete</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-info" @onclick="() => DetailsPost(post.Id)">Details</button>
                     </td>
                 </tr>
             }
@@ -63,9 +75,14 @@ else
 
     private async Task DeletePost(int postId)
     {
-        await IPostService.DeletePostAsync(postId); 
+        await IPostService.DeletePostAsync(postId);
 
         var p = await IPostService.GetAllPostsAsync();
         posts = p.ToArray();
+    }
+
+    private void DetailsPost(int postId)
+    {
+        Navigation.NavigateTo($"/detailsPost/{postId}");
     }
 }

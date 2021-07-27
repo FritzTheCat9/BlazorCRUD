@@ -25,7 +25,14 @@ namespace BlazorCRUD.Client.Services
 
         public async Task<Post> GetPostAsync(int postId)
         {
-            return await _httpClient.GetFromJsonAsync<Post>(ApiRoutes.Posts.Get.Replace("{postId}", postId.ToString()));
+            //return await _httpClient.GetFromJsonAsync<Post>(ApiRoutes.Posts.Get.Replace("{postId}", postId.ToString()));
+           
+            var res = await _httpClient.GetAsync(ApiRoutes.Posts.Get.Replace("{postId}", postId.ToString()));
+
+            if (res.IsSuccessStatusCode)
+                return await res.Content.ReadFromJsonAsync<Post>();
+            else
+                return null;
         }
 
         public async Task CreatePostAsync(Post postToCreate)

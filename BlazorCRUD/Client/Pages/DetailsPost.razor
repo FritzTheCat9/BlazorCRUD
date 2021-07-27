@@ -1,0 +1,31 @@
+﻿@page "/detailsPost/{postId:int}"
+@inject IPostService IPostService
+@inject NavigationManager Navigation
+
+@if (post != null)
+{
+    <h3>Post @post.Id Details: </h3>
+
+    <label>Post Id:</label>
+    <h4>@post.Id</h4>
+    <label>Post Title:</label>
+    <h4>@post.Title</h4>
+    <label>Post Text:</label>
+    <h4>@post.Text</h4>
+}
+else
+{
+    <p><em>Post with given id doesn't exist</em></p>
+}
+
+@code {
+    [Parameter]
+    public int postId { get; set; }
+
+    private Post post;
+
+    protected override async Task OnInitializedAsync()
+    {
+        post = await IPostService.GetPostAsync(postId);
+    }
+}

@@ -1,0 +1,69 @@
+﻿@page "/telerik/posts"
+@inject HttpClient Http
+@inject IPostService IPostService
+@inject NavigationManager Navigation
+
+@using System.Collections.Generic;
+@using Telerik.Blazor.Services;
+
+<TelerikGrid Data=@GridData EditMode="@GridEditMode.Inline"
+             Height="500px"
+             Resizable="false"
+             Pageable="true" PageSize=@PageSize
+             OnUpdate=@UpdateItem OnDelete=@DeleteItem OnCreate=@CreateItem>
+    <GridToolBar>
+        <GridCommandButton Command="Add" Icon="add">Add Post</GridCommandButton>
+    </GridToolBar>
+    <GridColumns>
+        <GridColumn Field=@nameof(Post.Id) Width="80px" Title="ID" Editable="false" />
+        <GridColumn Field=@nameof(Post.Title) Width="200px" Title="Title" />
+        <GridColumn Field=@nameof(Post.Text) Width="200px" Title="Text" />
+        <GridCommandColumn Width="250px">
+            <GridCommandButton Command="Edit" Icon="edit">Edit</GridCommandButton>
+            <GridCommandButton Command="Delete" Icon="delete">Delete</GridCommandButton>
+            <GridCommandButton Command="Save" Icon="save" ShowInEdit="true">Update</GridCommandButton>
+            <GridCommandButton Command="Cancel" Icon="cancel" ShowInEdit="true">Cancel</GridCommandButton>
+        </GridCommandColumn>
+    </GridColumns>
+</TelerikGrid>
+
+@code {
+    int PageSize = 10;
+    public List<Post> GridData { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        GridData = await IPostService.GetAllPostsAsync();
+    }
+
+    private async Task CreateItem(GridCommandEventArgs args)
+    {
+        var argsItem = args.Item as Post;
+
+        await IPostService.CreatePostAsync(argsItem);
+
+        GridData = await IPostService.GetAllPostsAsync();
+    }
+
+    private async Task DeleteItem(GridCommandEventArgs args)
+    {
+        var argsItem = args.Item as Post;
+
+        await IPostService.DeletePostAsync(argsItem.Id);
+
+        GridData.Remove(argsItem);
+    }
+
+    private async Task UpdateItem(GridCommandEventArgs args)
+    {
+        var argsItem = args.Item as Post;
+
+        await IPostService.UpdatePostAsync(argsItem.Id, argsItem);
+
+        var index = GridData.FindIndex(i => i.Id == argsItem.Id);
+        if (index != -1)
+        {
+            GridData[index] = argsItem;
+        }
+    }
+}
