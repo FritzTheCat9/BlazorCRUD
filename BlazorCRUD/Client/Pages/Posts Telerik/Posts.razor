@@ -33,7 +33,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        GridData = await IPostService.GetAllPostsAsync();
+        try
+        {
+            GridData = await IPostService.GetAllPostsAsync();
+        }
+        catch
+        {
+
+        }
     }
 
     private async Task CreateItem(GridCommandEventArgs args)

@@ -59,8 +59,15 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var p = await IPostService.GetAllPostsAsync();
-        posts = p.ToArray();
+        try
+        {
+            var p = await IPostService.GetAllPostsAsync();
+            posts = p.ToArray();
+        }
+        catch
+        {
+
+        }
     }
 
     private void CreatePost()

@@ -61,7 +61,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await IPostService.GetAllPostsAsync();
+        try
+        {
+            Elements = await IPostService.GetAllPostsAsync();
+        }
+        catch
+        {
+
+        }
     }
 
     private void BackupItem(object element)
