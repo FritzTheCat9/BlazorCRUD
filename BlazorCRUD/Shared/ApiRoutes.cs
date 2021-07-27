@@ -26,10 +26,5 @@ namespace BlazorCRUD.Shared
 
             public const string Create = Base + "/posts";
         }
-
-        public static class WeatherForecast
-        {
-            public const string GetAll = Base + "/forecasts";
-        }
     }
 }
