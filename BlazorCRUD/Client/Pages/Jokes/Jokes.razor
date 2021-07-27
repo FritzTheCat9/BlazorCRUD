@@ -1,0 +1,41 @@
+﻿@page "/jokes"
+@inject HttpClient Http
+@using BlazorCRUD.Shared.Models
+
+<h3>Random joke from external API: </h3>
+
+<MudCard Class="mb-5">
+    <MudCardContent>
+        @if (joke != null)
+        {
+            <MudText Typo="Typo.h4" Color="Color.Secondary">Joke</MudText>
+            <MudText Typo="Typo.h6">@joke.joke</MudText>
+        }
+        else
+        {
+            <MudText Typo="Typo.h6">Error while loading the joke</MudText>
+        }
+    </MudCardContent>
+</MudCard>
+
+<button class="btn btn-info" @onclick="LoadJoke">Load new joke</button>
+<NavLink class="btn btn-dark" href="https://sv443.net/jokeapi/v2/">Go to API</NavLink>
+
+@code {
+    private Joke joke { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadJoke();
+    }
+
+    private async Task LoadJoke()
+    {
+        var res = await Http.GetAsync("https://v2.jokeapi.dev/joke/Programming?type=single");
+
+        if (res.IsSuccessStatusCode)
+            joke = await res.Content.ReadFromJsonAsync<Joke>();
+        else
+            joke = null;
+    }
+}

@@ -4,18 +4,20 @@
 
 @if (post != null)
 {
-    <h3>Post @post.Id Details: </h3>
+    <MudText Typo="Typo.h4" Color="Color.Primary">Post @post.Id Details:</MudText>
 
-    <label>Post Id:</label>
-    <h4>@post.Id</h4>
-    <label>Post Title:</label>
-    <h4>@post.Title</h4>
-    <label>Post Text:</label>
-    <h4>@post.Text</h4>
+    <MudText Typo="Typo.h6" Color="Color.Secondary">Post Id:</MudText>
+    <MudText Typo="Typo.h6">@post.Id</MudText>
+
+    <MudText Typo="Typo.h6" Color="Color.Secondary">Post Title:</MudText>
+    <MudText Typo="Typo.h6">@post.Title</MudText>
+
+    <MudText Typo="Typo.h6" Color="Color.Secondary">Post Text:</MudText>
+    <MudText Typo="Typo.h6">@post.Text</MudText>
 }
 else
 {
-    <p><em>Post with given id doesn't exist</em></p>
+    <MudText Typo="Typo.h6" Color="Color.Error">Post with given id doesn't exist</MudText>
 }
 
 @code {

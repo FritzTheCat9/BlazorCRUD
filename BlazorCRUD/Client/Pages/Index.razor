@@ -5,14 +5,27 @@
 
 <h5>Welcome to basic CRUD Application.</h5>
 <br />
-<h5>In "Posts" tab you can make CRUD operations (Create, Edit, Delete, Details) on posts and call the api to update posts in the database.</h5>
-<br />
-<h5>In "Posts MudBlazor" tab you can to make CRUD operations using MadBlazor components. Also it is possible to sort posts by chosen collumn or sort elements.</h5>
-<br class="mb-5" />
 
-<button class="btn btn-info" @onclick="NavigateToPosts">Bootstrap posts</button>
-<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToMudblazorPosts">MudBlazor posts</MudButton>
-<TelerikButton Primary="true" OnClick="NavigateToTelerikPosts">Telerik posts</TelerikButton>
+<table class="table">
+    <tbody>
+        <tr>
+            <td><button class="btn btn-info" @onclick="NavigateToPosts">Posts</button></td>
+            <td><h5>In "Posts" tab you can make CRUD operations (Create, Edit, Delete, Details) on posts and call the api to update posts in the database.</h5></td>
+        </tr>
+        <tr>
+            <td><MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToMudblazorPosts">MudBlazor posts</MudButton></td>
+            <td><h5>In "MudBlazor posts" tab you can make CRUD operations using MadBlazor components. Also it is possible to sort posts by chosen collumn or search elements.</h5></td>
+        </tr>
+        <tr>
+            <td><TelerikButton Primary="true" OnClick="NavigateToTelerikPosts">Telerik posts</TelerikButton></td>
+            <td><h5>In "Telerik posts" tab you can make CRUD operations using Telerik components.</h5></td>
+        </tr>
+        <tr>
+            <td><MudButton Variant="Variant.Filled" Color="Color.Dark" OnClick="NavigateToJokesApi">Jokes API</MudButton></td>
+            <td><h5>In "Jokes API" tab you can fetch jokes about programming from external API.</h5></td>
+        </tr>
+    </tbody>
+</table>
 
 @code {
     private void NavigateToPosts()
@@ -28,5 +41,10 @@
     private void NavigateToTelerikPosts()
     {
         Navigation.NavigateTo("/telerik/posts");
+    }
+
+    private void NavigateToJokesApi()
+    {
+        Navigation.NavigateTo("/jokes");
     }
 } 
