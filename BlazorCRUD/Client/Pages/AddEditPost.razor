@@ -16,17 +16,18 @@
 
     <div>
         <EditForm Model="post" OnValidSubmit="SubmitPost">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+            <FluentValidationValidator />
 
             <div class="form-grup">
                 <label>Title</label>
                 <InputText @bind-Value="post.Title" />
+                <ValidationMessage For="() => post.Title"></ValidationMessage>
             </div>
 
             <div class="form-grup">
                 <label>Text</label>
                 <InputText @bind-Value="post.Text" />
+                <ValidationMessage For="() => post.Text"></ValidationMessage>
             </div>
 
             <div class="form-grup">

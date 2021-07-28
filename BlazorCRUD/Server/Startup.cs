@@ -1,5 +1,7 @@
 using BlazorCRUD.Server.Data;
 using BlazorCRUD.Server.Services;
+using BlazorCRUD.Shared.Validators;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +30,14 @@ namespace BlazorCRUD.Server
         {
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            // FluentValidation
+            services.AddControllers().AddFluentValidation(config =>
+            {
+                config.RegisterValidatorsFromAssemblyContaining<PostValidator>();
+                config.DisableDataAnnotationsValidation = true;
+                config.ValidatorOptions.LanguageManager.Enabled = false;
+            });
 
             // Database
             services.AddDbContext<ApplicationDbContext>(options =>
